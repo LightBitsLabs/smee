@@ -16,7 +16,7 @@ set retry_delay:int32 {{ .RetryDelay }}
 set idx:int32 0
 :retry_kernel
 kernel ${download-url}/vmlinuz-${arch} {{- if ne .VLANID "" }} vlan_id={{ .VLANID }} {{- end }} {{- range .ExtraKernelParams}} {{.}} {{- end}} \
-facility={{ .Facility }} syslog_host={{ .SyslogHost }} grpc_authority={{ .TinkGRPCAuthority }} tinkerbell_tls={{ .TinkerbellTLS }} worker_id={{ .WorkerID }} hw_addr={{ .HWAddr }} \
+facility={{ .Facility }} syslog_host={{ .SyslogHost }} grpc_authority={{ .TinkGRPCAuthority }} tinkerbell_tls={{ .TinkerbellTLS }} worker_id={{ .WorkerID }} hw_addr={{ .HWAddr }} id={{ .Hostname }} \
 modules=loop,squashfs,sd-mod,usb-storage intel_iommu=on iommu=pt initrd=initramfs-${arch} console=tty0 console=ttyS1,115200 && goto download_initrd || iseq ${idx} ${retries} && goto kernel-error || inc idx && echo retry in ${retry_delay} seconds ; sleep ${retry_delay} ; goto retry_kernel
 
 :download_initrd
@@ -61,4 +61,5 @@ type Hook struct {
 	WorkerID          string // example 3c:ec:ef:4c:4f:54 or worker1
 	Retries           int    // number of retries to attempt when fetching kernel and initrd files
 	RetryDelay        int    // number of seconds to wait between retries
+	Hostname          string // example rack01-server02
 }

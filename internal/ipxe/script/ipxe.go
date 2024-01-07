@@ -36,6 +36,7 @@ type data struct {
 	MACAddress    net.HardwareAddr
 	Arch          string
 	VLANID        string
+	Hostname      string
 	WorkflowID    string
 	Facility      string
 	IPXEScript    string
@@ -57,6 +58,7 @@ func getByMac(ctx context.Context, mac net.HardwareAddr, br handler.BackendReade
 		Arch:          d.Arch,
 		VLANID:        d.VLANID,
 		WorkflowID:    d.MACAddress.String(),
+		Hostname:      d.Hostname,
 		Facility:      n.Facility,
 		IPXEScript:    n.IPXEScript,
 		IPXEScriptURL: n.IPXEScriptURL,
@@ -76,6 +78,7 @@ func getByIP(ctx context.Context, ip net.IP, br handler.BackendReader) (data, er
 		Arch:          d.Arch,
 		VLANID:        d.VLANID,
 		WorkflowID:    d.MACAddress.String(),
+		Hostname:      d.Hostname,
 		Facility:      n.Facility,
 		IPXEScript:    n.IPXEScript,
 		IPXEScriptURL: n.IPXEScriptURL,
@@ -224,6 +227,7 @@ func (h *Handler) defaultScript(span trace.Span, hw data) (string, error) {
 		ExtraKernelParams: h.ExtraKernelParams,
 		Facility:          hw.Facility,
 		HWAddr:            mac.String(),
+		Hostname:          hw.Hostname,
 		SyslogHost:        h.PublicSyslogFQDN,
 		TinkerbellTLS:     h.TinkServerTLS,
 		TinkGRPCAuthority: h.TinkServerGRPCAddr,
